@@ -6,21 +6,22 @@
         Author: Diégo Derksen
         linkedIn: www.linkedin.com/in/diego-derksen
 #>
-try {
-    # Get the current lockout threshold
-    $CurrentNetAccounts = net accounts | select-string "lockout threshold"
+$threshold = 10
+$resetLockoutCounterAfter = 15
+$lockoutDuration = 15
 
-    # Check if the lockout threshold is 10
-    if($CurrentNetAccounts -like "*10*") {
-        Write-Host "Threshold staat op 10"
-        exit 0
-    }
-    else {
-        Write-Host "Threshold staat niet op 10"
-        exit 1
-    }
-}
-catch {
-    Write-Host "An error occurred: $_"
+$secpol = secedit /export /cfg secpol.cfg
+
+$lockoutThreshold = (Get-Content secpol.cfg | Select-String "LockoutBadCount").ToString().Split('=')[1].Trim()
+$resetLockoutCounter = (Get-Content secpol.cfg | Select-String "ResetLockoutCount").ToString().Split('=')[1].Trim()
+$lockoutDurationValue = (Get-Content secpol.cfg | Select-String "LockoutDuration").ToString().Split('=')[1].Trim()
+
+if ($lockoutThreshold -eq $threshold -and $resetLockoutCounter -eq $resetLockoutCounterAfter -and $lockoutDurationValue -eq $lockoutDuration) {
+    Write-Host "Waardes staan juist"
+    Remove-Item secpol.cfg
+    exit 0
+} else {
+    Write-Host "Waardes staan niet juist"
+    Remove-Item secpol.cfg
     exit 1
 }
