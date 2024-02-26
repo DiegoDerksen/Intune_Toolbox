@@ -1,6 +1,6 @@
 <#
     .SYNOPSIS
-        Detect whether accounts lockout threshold is set at 10
+        Detect whether accounts lockout threshold is set at 10, lockout duration and window is set to 15.
 
     .NOTES
         Author: Diégo Derksen
