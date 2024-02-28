@@ -6,10 +6,25 @@
         Author: Diégo Derksen
         linkedIn: www.linkedin.com/in/diego-derksen
 #>
-    # Set the lockout threshold to 10
-net accounts /lockoutthreshold:10
-net accounts /lockoutduration:15
-net accounts /lockoutwindow:15
+$threshold = 10
+$resetLockoutCounterAfter = 15
+$lockoutDuration = 15
 
-Write-Host "Waardes gewijzigd"
-Exit 0
+$secpol = secedit /export /cfg secpol.cfg
+
+$lockoutThreshold = (Get-Content secpol.cfg | Select-String "LockoutBadCount").ToString().Split('=')[1].Trim()
+$resetLockoutCounter = (Get-Content secpol.cfg | Select-String "ResetLockoutCount").ToString().Split('=')[1].Trim()
+$lockoutDurationValue = (Get-Content secpol.cfg | Select-String "LockoutDuration").ToString().Split('=')[1].Trim()
+
+if ($lockoutThreshold -ne $threshold -or $resetLockoutCounter -ne $resetLockoutCounterAfter -or $lockoutDurationValue -ne $lockoutDuration) {
+    (Get-Content secpol.cfg).Replace("LockoutBadCount = $lockoutThreshold", "LockoutBadCount = $threshold").Replace("ResetLockoutCount = $resetLockoutCounter", "ResetLockoutCount = $resetLockoutCounterAfter").Replace("LockoutDuration = $lockoutDurationValue", "LockoutDuration = $lockoutDuration") | Set-Content secpol.cfg
+    secedit /configure /db secedit.sdb /cfg secpol.cfg /areas SECURITYPOLICY
+    Remove-Item secpol.cfg
+    Remove-Item C:\Windows\security\logs\scesrv.log
+    Write-Host "Waardes zijn aangepast"
+    exit 0
+} else {
+    Remove-Item secpol.cfg
+    Write-Host "Waardes zijn niet aangepast"
+    exit 1
+}
