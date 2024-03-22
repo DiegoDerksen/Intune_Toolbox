@@ -14,7 +14,7 @@ Graph API > SecurityAlert.Read.All (Application)
 6. After the app has been created go to API Permissions
 7. Click on Add a Permission
 8. Select Microsoft Graph and select Application Permissions
-9. Look up the following permission SecurityAlert.Read.All and add this to the application followed up by grating admin consent
+9. Look up the following permission SecurityAlert.Read.All and add this to the application followed up by granting admin consent
 
 ## Create a client secret
 1. Go to your newly created app
