@@ -359,6 +359,7 @@ The input is:
 }`
 
 6. Create a new step with Create File in Sharepoint
+
 Choose a site address
 
 Choose the folder where you want to create the file
