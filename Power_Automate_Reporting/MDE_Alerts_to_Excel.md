@@ -2,6 +2,7 @@ I'll be showing you how to make reporting from Microsoft Defender for Endpoint a
 
 # Prerequisites:
 Power Automate Premium (for HTTP connector)
+
 App registration in Azure with the following permission:
 Graph API > SecurityAlert.Read.All (Application)
 
